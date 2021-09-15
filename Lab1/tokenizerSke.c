@@ -5,14 +5,20 @@
    ('\t' or ' ').
    Zero terminators are not printable (therefore false) */
 bool delim_character(char c){
-
+	if(c == '\t' || c == ' '){
+		return true;
+	}
+	return false;
 }
 
 /* Return true (non-zero) if c is a non-whitespace
    character (not tab or space).
    Zero terminators are not printable (therefore false) */
 bool non_delim_character(char c){
-
+	if(c == '\0'){
+		return false;
+	}
+	return !delim_character(c);
 }
 
 /* Returns a pointer to the first character of the next
@@ -48,4 +54,7 @@ char** tokenize(char* str){
 
 
 void print_all_tokens(char** tokens){
+}
+int main(){
+	return 0;
 }
