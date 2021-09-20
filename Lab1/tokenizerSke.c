@@ -27,6 +27,7 @@ bool non_delim_character(char c){
 char *word_start(char* str){
 	char *copy = (char*) malloc(sizeof(str));
 	copy = str;
+	
 	//Goes until it finds a whitespace characted
 	while(non_delim_character(*copy) ){
 		copy++;
@@ -35,14 +36,24 @@ char *word_start(char* str){
 	while( delim_character(*copy) ) {
 		copy++;
 	}
-	return copy++; //since the last loop ends at the final whitespace we need to more up one
-	
-
+	return copy++; //since the last loop ends at the final whitespace we need to move up one
     }
 
 /* Returns a pointer to the first space character of the zero
 terminated string*/
 char *end_word(char* str){
+    char *copy = (char*) malloc(sizeof(str));
+	copy = str;
+	
+	//Goes until it finds a non-whitespace character
+	while(delim_character(*copy) ){
+		copy++;
+	}
+	//goes until non-whitespace characters end
+	while( non_delim_character(*copy) ) {
+		copy++;
+	}
+	return copy++; //since the last loop ends at the final non-whitespace character we need to move up one
 
 }
 // counts the number of words or tokens
@@ -69,5 +80,9 @@ char** tokenize(char* str){
 void print_all_tokens(char** tokens){
 }
 int main(){
-	return 0;
+    char a[10] = {'H','w',' ',' ','r','w',' ',' ',' ','t'};
+    char *p = word_start(a);
+    printf("%s\n",p);
+    printf("%s", end_word(p) );
+
 }
