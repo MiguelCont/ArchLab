@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 /* Return true (non-zero) if c is a whitespace characer
    ('\t' or ' ').
    Zero terminators are not printable (therefore false) */
@@ -24,8 +25,20 @@ bool non_delim_character(char c){
 /* Returns a pointer to the first character of the next
    space-separated word*/
 char *word_start(char* str){
+	char* copy = (char*) malloc(sizeof(str));
+	copy = str;
+	//Goes until it finds a whitespace characted
+	while(non_delim_character(*copy) ){
+		copy++;
+	}
+	//goes until whitespace ends
+	while( delim_character(*copy) ) {
+		copy++;
+	}
+	return copy++; //since the last loop ends at the final whitespace we need to more up one
+	
 
-}
+    }
 
 /* Returns a pointer to the first space character of the zero
 terminated string*/
