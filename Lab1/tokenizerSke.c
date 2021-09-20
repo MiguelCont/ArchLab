@@ -25,7 +25,7 @@ bool non_delim_character(char c){
 /* Returns a pointer to the first character of the next
    space-separated word*/
 char *word_start(char* str){
-	char* copy = (char*) malloc(sizeof(str));
+	char *copy = (char*) malloc(sizeof(str));
 	copy = str;
 	//Goes until it finds a whitespace characted
 	while(non_delim_character(*copy) ){
