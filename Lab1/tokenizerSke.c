@@ -58,7 +58,19 @@ char *end_word(char* str){
 }
 // counts the number of words or tokens
 int count_tokens(char* str){
-
+    //makes a copy of the char pointer
+    char *copy = (char*) malloc(sizeof(*str));
+	copy = str;
+	//initializes counter
+	int count = 0;
+	
+	//loops until the pointer points to nothing
+	while(*copy != 0){
+    	copy = end_word(copy); //points to the end of the first token
+    	count++;            // increments since one token is found
+    	copy = word_start(copy); // points to the beginning of the next token
+	}
+	return count;
 
 }
 /* Returns a freshly allocated zero-terminated vector of freshly allocated
