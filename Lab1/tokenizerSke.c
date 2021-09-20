@@ -42,7 +42,7 @@ char *word_start(char* str){
 /* Returns a pointer to the first space character of the zero
 terminated string*/
 char *end_word(char* str){
-    char *copy = (char*) malloc(sizeof(str));
+    	char *copy = (char*) malloc(sizeof(str));
 	copy = str;
 	
 	//Goes until it finds a non-whitespace character
@@ -58,8 +58,8 @@ char *end_word(char* str){
 }
 // counts the number of words or tokens
 int count_tokens(char* str){
-    //makes a copy of the char pointer
-    char *copy = (char*) malloc(sizeof(*str));
+   	 //makes a copy of the char pointer
+    	char *copy = (char*) malloc(sizeof(*str));
 	copy = str;
 	//initializes counter
 	int count = 0;
