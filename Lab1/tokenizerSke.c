@@ -1,10 +1,3 @@
-/******************************************************************************
-
-                            Online C Compiler.
-                Code, Compile, Run and Debug C program online.
-Write your code in this editor and press "Run" button to compile and execute it.
-
-*******************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -32,7 +25,7 @@ bool non_delim_character(char c){
 /* Returns a pointer to the first character of the next
    space-separated word*/
 char *word_start(char* str){
-	char *copy = (char*) malloc(sizeof(str));
+	char *copy = (char*) malloc(sizeof(char*));
 	copy = str;
 	if(non_delim_character(*copy))
 	    return copy;
@@ -50,7 +43,7 @@ char *word_start(char* str){
 /* Returns a pointer to the first space character of the zero
 terminated string*/
 char *end_word(char* str){
-    char *copy = (char*) malloc(sizeof(str));
+    char *copy = (char*) malloc(sizeof(char*));
 	copy = str;
 	if(delim_character(*copy))
 	    return copy;
@@ -68,7 +61,7 @@ char *end_word(char* str){
 // counts the number of words or tokens
 int count_tokens(char* str){
     //makes a copy of the char pointer
-    char *copy = (char*) malloc(sizeof(*str));
+    char *copy = (char*) malloc(sizeof(char*));
 	copy = str;
 	//initializes counter
 	int count = 0;
@@ -91,7 +84,7 @@ int count_tokens(char* str){
      tokens[3] = 0
 */
 char *copy_str(char *inStr, short len){
-    char *copy = (char*) malloc(sizeof(*inStr) * (len) );
+    char *copy = (char*) malloc(sizeof(char*) * (len) );
     for(int i =0; i <len;i++){
         //"+i" works the same as [i] when refering to an index in an array
         *(copy+i) = *(inStr+i);
@@ -102,7 +95,7 @@ char *copy_str(char *inStr, short len){
 } 
 char** tokenize(char* str){
     int tokenCount = count_tokens(str);
-    char **pointers = (char**) malloc(sizeof(*str) * (tokenCount));
+    char **pointers = (char**) malloc(sizeof(char*) * (tokenCount));
     char *start;
     char *end;
     start = word_start(str); //eliminates any possible whitespace at the beginning of the sentence
@@ -111,6 +104,7 @@ char** tokenize(char* str){
         *(pointers+i)/*token location*/ = copy_str(start, end-start);
         start = word_start(end); //resets pointer to the next word to eliminate whitespace
     }
+    *(pointers+tokenCount) = '\0'; //adds a EOF to the end of pointers
     return pointers;
 }
 
@@ -123,10 +117,10 @@ void print_all_tokens(char** tokens){
     }
 }
 int main(){
-    char input = "";
-    while(input != '$'){
-        printf("Please enter an input string(to exit input '$'):\n$");
-        scanf("%c", input);
-        printf("%c", input);
-    }
+	char input[100];
+	char *in;
+        printf("Please enter an input string:\n$");
+        fgets(input, sizeof(input), stdin);
+	in = input;
+	print_all_tokens(tokenize(in));
 }
