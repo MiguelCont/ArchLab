@@ -11,6 +11,10 @@ void init_regs();
 bool interpret(char* instr);
 void write_read_demo();
 
+
+//Matt is gay
+
+
 /**
  * Initialize register array for usage.
  * Malloc space for each 32-bit register then initializes each register to 0.
