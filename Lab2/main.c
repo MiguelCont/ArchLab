@@ -1,3 +1,11 @@
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h> // malloc & free
+#include <stdint.h> // use guaranteed 64-bit integers
+#include "tokenizer.h" // Create header file and reference that
+#include "memory.h" // built-in functions to read and write to a specific file
+
 void print_regs(){
 	int col_size = 10;
 	for(int i = 0; i < 8; i++){
