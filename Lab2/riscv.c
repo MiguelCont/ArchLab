@@ -31,15 +31,13 @@ void init_regs(){
  * You may expect that a single, properly formatted RISC-V instruction string will be passed
  * as a parameter to this function.
  */
-bool interpret(char instr[]){
-	char *inst;
-	char delim[]= {" "};
-	char *d;
-	inst = instr;
-	d = delim;
-	char* tokens = tokenize(inst, d);
-	printf("%s", tokens);	
+bool interpret(char *instr){
+	char *txt = "mem.txt";
+	char *tokens;
+	tokens = tokenize(instr, ' ');	
 	printf("%s", instr);
+
+	print_all_tokens(tokens);
 }
 
 
