@@ -1,83 +1,61 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <string.h>
-/* Return true (non-zero) if c is a whitespace characer
-   ('\t' or ' ').
-   Zero terminators are not printable (therefore false) */
-   
-bool delim_character(char c, char *delim){
-	if(c == '\t' || c == *delim){
-		return true;
-	}
-	return false;
+
+/* Return true (non-zero) if c is a whitespace character
+   ('\t', ' ').
+   Zero terminators are not printable (therefor false).
+ */
+bool delim_character (char c, const char delim){
+  if (c == '\t' || c == delim)
+    return true;
+  else
+    return false;
 }
 
-/* Return true (non-zero) if c is a non-whitespace
-   character (not tab or space).
-   Zero terminators are not printable (therefore false) */
-bool non_delim_character(char c, char *delim){
-	if(c == '\0'){
-		return false;
-	}
-	return !delim_character(c, delim);
+/* Return true (non-zero) if c is a non-whitespace character
+   (not tab or space). Zero terminators are not printable
+   (therefore false).
+*/
+bool non_delim_character(char c, const char delim){
+  if (c == '\t' || c == '\0' || c == delim)
+    return false;
+  else
+    return true;
 }
 
 /* Returns a pointer to the first character of the next
-   space-separated word*/
-char *word_start(char* str, char *delim){
-	char *copy = (char*) malloc(sizeof(char*));
-	copy = str;
-	if(non_delim_character(*copy,delim))
-	    return copy;
-	//Goes until it finds a whitespace characted
-	while(non_delim_character(*copy,delim) ){
-		copy++;
-	}
-	//goes until whitespace ends
-	while( delim_character(*copy,delim) ) {
-		copy++;
-	}
-	return copy++; //since the last loop ends at the final whitespace we need to move up one
-    }
+   space-separated word.
+*/
+char *word_start(char* str, const char delim){
+  while(delim_character(*str, delim))
+    str++;
+  return str;
+}
 
 /* Returns a pointer to the first space character of the zero
-terminated string*/
-char *end_word(char* str, char *delim){
-    char *copy = (char*) malloc(sizeof(char*));
-	copy = str;
-	if(delim_character(*copy,delim))
-	    return copy;
-	//Goes until it finds a non-whitespace character
-	while(delim_character(*copy,delim) ){
-		copy++;
-	}
-	//goes until non-whitespace characters end
-	while( non_delim_character(*copy,delim) ) {
-		copy++;
-	}
-	return copy++; //since the last loop ends at the final non-whitespace character we need to move up one
-
+   terminated string.
+*/
+char *end_word(char* str, const char delim){
+  while(non_delim_character(*str, delim))
+    str++;
+  return str;
 }
-// counts the number of words or tokens
-int count_tokens(char* str, char *delim){
-    //makes a copy of the char pointer
-    char *copy = (char*) malloc(sizeof(char*));
-	copy = str;
-	//initializes counter
-	int count = 0;
-	
-	//loops until the pointer points to nothing
-	while(*copy != 0){
-    	copy = end_word(copy,delim); //points to the end of the first token
-    	count++;            // increments since one token is found
-    	copy = word_start(copy,delim); // points to the beginning of the next token
-	}
-	return count;
 
+/* counts the number of words or tokens*/
+int count_tokens(char* str, const char delim){
+  int count = 0;
+  while(*str != '\0'){
+    if (delim_character(*str, delim))
+      count++;
+    str++; // moves pointer along the str array.
+  }
+  count++; // accounts for the terminator.
+  return count;
 }
-/* Returns a freshly allocated zero-terminated vector of freshly allocated
-   space-separated tokens from zero-terminated str.
+
+/* Returns a freshly allocated zero-terminated vector of freshly 
+   allocated space-seperated tokens from zero-terminated str.
    For example, tokenize("hello world string") would result in:
      tokens[0] = "hello"
      tokens[1] = "world"
@@ -85,35 +63,32 @@ int count_tokens(char* str, char *delim){
      tokens[3] = 0
 */
 char *copy_str(char *inStr, short len){
-    char *copy = (char*) malloc(sizeof(char*) * (len) );
-    for(int i =0; i <len;i++){
-        //"+i" works the same as [i] when refering to an index in an array
-        *(copy+i) = *(inStr+i);
-    }
-    //adds the zero-terminating part to the end of the pointer
-    *(copy+len) = '\0';
-    return copy;
-} 
-char** tokenize(char* str, char *delim){
-    int tokenCount = count_tokens(str, delim);
-    char **pointers = (char**) malloc(sizeof(char*) * (tokenCount));
-    char *start;
-    char *end;
-    start = word_start(str,delim); //eliminates any possible whitespace at the beginning of the sentence
-    for(int i = 0; i < tokenCount; i++){
-        end = end_word(start,delim);
-        *(pointers+i)/*token location*/ = copy_str(start, end-start);
-        start = word_start(end,delim); //resets pointer to the next word to eliminate whitespace
-    }
-    *(pointers+tokenCount) = '\0'; //adds a EOF to the end of pointers
-    return pointers;
+  /*Allocates enough memory for an array of chars the size of inStr*/
+  char *copy = (char*)malloc((len)*sizeof(char)); 
+  for (int i = 0; i < len; i++)
+    *(copy+i) = *(inStr+i);
+  *(copy+len) = '\0';
+  return copy;
+}
+
+char** tokenize(char* str, const char delim){
+  int count = count_tokens(str, delim);
+  /*Allocates enough memory for an array containing pointers to other arrays.*/
+  char **arrayOfPointers = (char**)malloc((count+1)*sizeof(char*));
+  char *end;
+  char *start = word_start(str, delim);
+  for (int i = 0; i < count; i++){
+    end = end_word(start, delim);
+    *(arrayOfPointers+i) = copy_str(start, (end-start)); //end-start finds the offset for the token
+    start = word_start(end, delim);
+  }
+  *(arrayOfPointers+(count+1)) = NULL; // makes the last item in arrayOfPointers = NULL.
+  return arrayOfPointers;
 }
 
 void print_all_tokens(char** tokens){
-    int counter = 0;
-    while(*tokens != 0){
-        printf("Tokens[%i]: %s\n",counter, *tokens );
-        tokens++;
-        counter++;
-    }
+  for (int i = 0; *tokens != '\0'; i++){
+    printf("Tokens[%d]: %s\n", i, *tokens);
+    *tokens++;
+  }
 }
