@@ -4,6 +4,7 @@
 #include <stdint.h> // use guaranteed 64-bit integers
 #include "tokenizer.h" // Create header file and reference that
 #include "memory.h" // built-in functions to read and write to a specific file
+#include "string.h"
 
 int32_t* reg; // Array of 32 32-bit registers
 
@@ -30,13 +31,13 @@ void init_regs(){
  * You may expect that a single, properly formatted RISC-V instruction string will be passed
  * as a parameter to this function.
  */
-bool interpret(char* instr){
+bool interpret(char instr[]){
 	printf("%s", instr);
-	//printf("%s", *tokens);
-	//for(int i =0; i< 2; i++){
-	//	printf("%s", tokens);
-	//	tokens++;
-	//}
+	char *tokens = strtok(instr,"\t");
+	while(tokens != NULL){
+		printf("%s", tokens);
+		tokens++;
+	}
 	return true;
 }
 
@@ -71,6 +72,9 @@ int main(){
 
 	// Below is a sample program to a write-read. Overwrite this with your own code.
 	//write_read_demo();
-	interpret("SW x5 200(x4)");
+	char a[100];
+	fgets(a,sizeof(a), stdin);
+	interpret(a);
 	return 0;
 }
+
