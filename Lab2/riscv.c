@@ -31,6 +31,12 @@ void init_regs(){
  * as a parameter to this function.
  */
 bool interpret(char* instr){
+	printf("%s", instr);
+	//printf("%s", *tokens);
+	//for(int i =0; i< 2; i++){
+	//	printf("%s", tokens);
+	//	tokens++;
+	//}
 	return true;
 }
 
@@ -64,7 +70,7 @@ int main(){
 	init_regs(); // DO NOT REMOVE THIS LINE
 
 	// Below is a sample program to a write-read. Overwrite this with your own code.
-	write_read_demo();
-
+	//write_read_demo();
+	interpret("SW x5 200(x4)");
 	return 0;
 }
