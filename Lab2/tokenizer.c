@@ -5,8 +5,9 @@
 /* Return true (non-zero) if c is a whitespace characer
    ('\t' or ' ').
    Zero terminators are not printable (therefore false) */
-bool delim_character(char c){
-	if(c == '\t' || c == ' '){
+   
+bool delim_character(char c, char *delim){
+	if(c == '\t' || c == *delim){
 		return true;
 	}
 	return false;
@@ -15,26 +16,26 @@ bool delim_character(char c){
 /* Return true (non-zero) if c is a non-whitespace
    character (not tab or space).
    Zero terminators are not printable (therefore false) */
-bool non_delim_character(char c){
+bool non_delim_character(char c, char *delim){
 	if(c == '\0'){
 		return false;
 	}
-	return !delim_character(c);
+	return !delim_character(c, delim);
 }
 
 /* Returns a pointer to the first character of the next
    space-separated word*/
-char *word_start(char* str){
+char *word_start(char* str, char *delim){
 	char *copy = (char*) malloc(sizeof(char*));
 	copy = str;
-	if(non_delim_character(*copy))
+	if(non_delim_character(*copy,delim))
 	    return copy;
 	//Goes until it finds a whitespace characted
-	while(non_delim_character(*copy) ){
+	while(non_delim_character(*copy,delim) ){
 		copy++;
 	}
 	//goes until whitespace ends
-	while( delim_character(*copy) ) {
+	while( delim_character(*copy,delim) ) {
 		copy++;
 	}
 	return copy++; //since the last loop ends at the final whitespace we need to move up one
@@ -42,24 +43,24 @@ char *word_start(char* str){
 
 /* Returns a pointer to the first space character of the zero
 terminated string*/
-char *end_word(char* str){
+char *end_word(char* str, char *delim){
     char *copy = (char*) malloc(sizeof(char*));
 	copy = str;
-	if(delim_character(*copy))
+	if(delim_character(*copy,delim))
 	    return copy;
 	//Goes until it finds a non-whitespace character
-	while(delim_character(*copy) ){
+	while(delim_character(*copy,delim) ){
 		copy++;
 	}
 	//goes until non-whitespace characters end
-	while( non_delim_character(*copy) ) {
+	while( non_delim_character(*copy,delim) ) {
 		copy++;
 	}
 	return copy++; //since the last loop ends at the final non-whitespace character we need to move up one
 
 }
 // counts the number of words or tokens
-int count_tokens(char* str){
+int count_tokens(char* str, char *delim){
     //makes a copy of the char pointer
     char *copy = (char*) malloc(sizeof(char*));
 	copy = str;
@@ -68,9 +69,9 @@ int count_tokens(char* str){
 	
 	//loops until the pointer points to nothing
 	while(*copy != 0){
-    	copy = end_word(copy); //points to the end of the first token
+    	copy = end_word(copy,delim); //points to the end of the first token
     	count++;            // increments since one token is found
-    	copy = word_start(copy); // points to the beginning of the next token
+    	copy = word_start(copy,delim); // points to the beginning of the next token
 	}
 	return count;
 
@@ -93,16 +94,16 @@ char *copy_str(char *inStr, short len){
     *(copy+len) = '\0';
     return copy;
 } 
-char** tokenize(char* str){
-    int tokenCount = count_tokens(str);
+char** tokenize(char* str, char *delim){
+    int tokenCount = count_tokens(str, delim);
     char **pointers = (char**) malloc(sizeof(char*) * (tokenCount));
     char *start;
     char *end;
-    start = word_start(str); //eliminates any possible whitespace at the beginning of the sentence
+    start = word_start(str,delim); //eliminates any possible whitespace at the beginning of the sentence
     for(int i = 0; i < tokenCount; i++){
-        end = end_word(start);
+        end = end_word(start,delim);
         *(pointers+i)/*token location*/ = copy_str(start, end-start);
-        start = word_start(end); //resets pointer to the next word to eliminate whitespace
+        start = word_start(end,delim); //resets pointer to the next word to eliminate whitespace
     }
     *(pointers+tokenCount) = '\0'; //adds a EOF to the end of pointers
     return pointers;
@@ -115,12 +116,4 @@ void print_all_tokens(char** tokens){
         tokens++;
         counter++;
     }
-}
-int main(){
-	char input[100];
-	char *in;
-        printf("Please enter an input string:\n$");
-        fgets(input, sizeof(input), stdin);
-	in = input;
-	print_all_tokens(tokenize(in));
 }
