@@ -24,7 +24,40 @@ void init_regs(){
 		reg[i] = i;
 }
 
+int instructionCases(char* s){ //handles cases for the instruction type
+  if (equal(s, "LW")) {return 0;}
+  else if (equal(s, "SW")) {return 1;}
+  else if (equal(s, "ADD")) {return 2;}
+  else if (equal(s, "ADDI")) {return 3;}
+  else if (equal(s, "AND")) {return 4;}
+  else if (equal(s, "OR")) {return 5;}
+  else if (equal(s, "XOR")) {return 6;}
+  else
+    return -1;
+}
 
+bool equal(char* s1, char* s2){ // checks if two strings are equal
+  char* temp1 = s1;
+  char* temp2 = s2;
+  int c1 = 0;
+  int c2 = 0;
+
+  while (*(temp1+c1) != '\0'){ 
+	  c1++;
+  }
+  while (*(temp2+c2) != '\0'){
+    c2++;
+  }
+  if (c1 != c2){return false;}
+  
+  int i = 0;
+  while (*(s1+i) != '\0' && *(s2+i) != '\0'){
+    if (*(s1+i) != *(s2+i))
+      return false;
+    i++;
+  }
+  return true;
+}
 
 /**
  * Fill out this function and use it to read interpret user input to execute RV64 instructions.
