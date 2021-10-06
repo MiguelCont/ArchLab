@@ -32,13 +32,14 @@ void init_regs(){
  * as a parameter to this function.
  */
 bool interpret(char instr[]){
+	char *inst;
+	char delim[]= {" "};
+	char *d;
+	inst = instr;
+	d = delim;
+	char* tokens = tokenize(inst, d);
+	printf("%s", tokens);	
 	printf("%s", instr);
-	char *tokens = strtok(instr,"\t");
-	while(tokens != NULL){
-		printf("%s", tokens);
-		tokens++;
-	}
-	return true;
 }
 
 
