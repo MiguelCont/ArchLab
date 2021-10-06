@@ -24,23 +24,6 @@ void init_regs(){
 		reg[i] = i;
 }
 
-int instructionCases(char* s){ //handles cases for the instruction type
-  if (equal(s, "LW")) {return 0;}
-  else if (equal(s, "SW")) {
-	  return 1;}
-  else if (equal(s, "ADD")) {
-	  return 2;}
-  else if (equal(s, "ADDI")) {
-	  return 3;}
-  else if (equal(s, "AND")) {
-	  return 4;}
-  else if (equal(s, "OR")) {
-	  return 5;}
-  else if (equal(s, "XOR")) {
-	  return 6;}
-  else
-    return -1;
-}
 
 bool equal(char* s1, char* s2){ // checks if two strings are equal
   char* temp1 = s1;
@@ -63,6 +46,24 @@ bool equal(char* s1, char* s2){ // checks if two strings are equal
     i++;
   }
   return true;
+}
+
+int instructionCases(char* s){ //handles cases for the instruction type
+  if (equal(s, "LW")) {return 0;}
+  else if (equal(s, "SW")) {
+	  return 1;}
+  else if (equal(s, "ADD")) {
+	  return 2;}
+  else if (equal(s, "ADDI")) {
+	  return 3;}
+  else if (equal(s, "AND")) {
+	  return 4;}
+  else if (equal(s, "OR")) {
+	  return 5;}
+  else if (equal(s, "XOR")) {
+	  return 6;}
+  else
+    return -1;
 }
 
 /**
