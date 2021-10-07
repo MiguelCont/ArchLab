@@ -78,6 +78,7 @@ bool interpret(char *instr){
 	printf("%s", instr);
 
 	print_all_tokens(tokens);
+	//implement a switch case for each instruction and act accordording to the instruction
 }
 
 
