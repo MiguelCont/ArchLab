@@ -23,6 +23,33 @@ void init_regs(){
 	for(int i = 0; i < 32; i++)
 		reg[i] = i;
 }
+void print_reg(){
+	int col_size = 10;
+	for(int i = 0; i< 8; i++){
+		printf("X%02i:%.*lld ", i, col_size, (long long int) reg[i]);
+		printf("X%02i:%.*lld ", i+8, col_size, (long long int) reg[i+8]);
+		printf("X%02i:%.*lld ", i+16, col_size, (long long int) reg[i+16]);
+		printf("X%02i:%.*lld\n", i+24, col_size, (long long int) reg[i+24]);
+
+	}
+}
+
+int getActualLocation(char* s){ //change X## to just ##
+	int i = 0;
+	char pos[2];
+	while( *(s+i) != '\0' ){
+		i++;
+	}
+	//the addition of 1 from the beginning index removes the X
+	if(i >= 3){
+		pos[0] = *(s+1);
+	       	pos[1] = *(s+2);
+	}
+	else
+		pos[0] = *(s+1); //for single digit register
+
+	return atoi(pos); //makes the string of nums to an int
+}
 
 
 bool equal(char* s1, char* s2){ // checks if two strings are equal
@@ -73,12 +100,41 @@ int instructionCases(char* s){ //handles cases for the instruction type
  */
 bool interpret(char *instr){
 	char *txt = "mem.txt";
-	char *tokens;
+	char **tokens;
 	tokens = tokenize(instr, ' ');	
-	printf("%s", instr);
-
 	print_all_tokens(tokens);
+	int instructNum = instructionCases(tokens[0]);
 	//implement a switch case for each instruction and act accordording to the instruction
+	switch(instructNum){
+		case 0:
+			printf("LW\n");
+			int saveLocation = getActualLocation( *(tokens+1) );
+			char** LwLastTokenSplit = tokenize( *(tokens+2), '('); //removes the first (
+			char** LwLastTokens = tokenize( *(LwLastTokenSplit+1), ')');
+			
+			int regLocation = getActualLocation(*LwLastTokens);
+			int32_t LwLocation = atoi(*LwLastTokenSplit) + regLocation;
+
+			reg[saveLocation] = read_address(LwLocation, txt);
+			break;
+		case 1:
+			printf("SW\n");
+			saveLocation = getActualLocation( *(tokens+1));
+			char** SwLastTokenSplit = tokenize(*(tokens+2), '(');
+			char** SwLastTokens = tokenize( *(SwLastTokenSplit+1), ')' );
+			
+			regLocation = getActualLocation(*SwLastTokens);
+			
+			int32_t SW_write = reg[saveLocation];
+			int32_t SwLocation = atoi(*SwLastTokenSplit)+regLocation;
+			int32_t SwWrite = write_address(SW_write, SwLocation, txt);
+			break;
+		default:
+			printf("Nah");
+			return false;	
+	}
+	print_reg();
+	return true;
 }
 
 
@@ -112,6 +168,7 @@ int main(){
 
 	// Below is a sample program to a write-read. Overwrite this with your own code.
 	//write_read_demo();
+	print_reg();
 	char a[100];
 	fgets(a,sizeof(a), stdin);
 	interpret(a);
