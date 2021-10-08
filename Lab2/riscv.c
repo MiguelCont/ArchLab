@@ -32,6 +32,7 @@ void print_reg(){
 		printf("X%02i:%.*lld\n", i+24, col_size, (long long int) reg[i+24]);
 
 	}
+	printf("\n");
 }
 
 int getActualLocation(char* s){ //change X## to just ##
@@ -99,38 +100,56 @@ int instructionCases(char* s){ //handles cases for the instruction type
  * as a parameter to this function.
  */
 bool interpret(char *instr){
-	char *txt = "mem.txt";
+	char *txt = "mem.txt"; //loads the mem.txt file so we can read it
 	char **tokens;
-	tokens = tokenize(instr, ' ');	
-	print_all_tokens(tokens);
+	tokens = tokenize(instr, ' ');	//gets the tokens seperated by space
+	
 	int instructNum = instructionCases(tokens[0]);
 	//implement a switch case for each instruction and act accordording to the instruction
 	switch(instructNum){
-		case 0:
+		case 0: 		//LW Case
 			printf("LW\n");
-			int saveLocation = getActualLocation( *(tokens+1) );
+			int saveLocation = getActualLocation( *(tokens+1) );  //location where the info will be loaded
 			char** LwLastTokenSplit = tokenize( *(tokens+2), '('); //removes the first (
-			char** LwLastTokens = tokenize( *(LwLastTokenSplit+1), ')');
+			char** LwLastTokens = tokenize( *(LwLastTokenSplit+1), ')'); //removes last (
 			
-			int regLocation = getActualLocation(*LwLastTokens);
+			int regLocation = getActualLocation(*LwLastTokens); //int location of register for reg array
 			int32_t LwLocation = atoi(*LwLastTokenSplit) + regLocation;
 
-			reg[saveLocation] = read_address(LwLocation, txt);
+			reg[saveLocation] = read_address(LwLocation, txt); //updates loaction on arr
 			break;
-		case 1:
+		case 1:            //SW Case
 			printf("SW\n");
-			saveLocation = getActualLocation( *(tokens+1));
+			saveLocation = getActualLocation( *(tokens+1)); //location for where info will be saved
 			char** SwLastTokenSplit = tokenize(*(tokens+2), '(');
 			char** SwLastTokens = tokenize( *(SwLastTokenSplit+1), ')' );
 			
-			regLocation = getActualLocation(*SwLastTokens);
+			regLocation = getActualLocation(*SwLastTokens); //int location for store register
 			
-			int32_t SW_write = reg[saveLocation];
-			int32_t SwLocation = atoi(*SwLastTokenSplit)+regLocation;
-			int32_t SwWrite = write_address(SW_write, SwLocation, txt);
+			int32_t SW_write = reg[saveLocation]; //location where info will be written
+			int32_t SwLocation = atoi(*SwLastTokenSplit)+regLocation; //location of info
+			int32_t SwWrite = write_address(SW_write, SwLocation, txt); //writes info
 			break;
+		case 2:		//ADD case
+			printf("ADD\n");
+			saveLocation = getActualLocation( *(tokens+1) ); //int location of save register
+			int r1 = getActualLocation( *(tokens + 2 ) ); //int location of first value
+			int r2 = getActualLocation( *(tokens + 3 ) ); //int location of second value
+
+			reg[saveLocation] = reg[r1] + reg[r2];
+			printf("Result: %d\n", reg[saveLocation]);
+			break;
+		case 3: 
+			printf("ADDI\n");
+			saveLocation = getActualLocation(*(tokens+1) );//int location of save register
+			r1 = getActualLocation(*(tokens+2)); //int location of first register
+			r2 = atoi( *(tokens+3) ); //int value of the imm value
+
+			reg[saveLocation] = reg[r1] + r2;
+			printf("Result: %d\n",reg[saveLocation]);
+			break;	
 		default:
-			printf("Nah");
+			printf("Error\n");
 			return false;	
 	}
 	print_reg();
@@ -170,8 +189,15 @@ int main(){
 	//write_read_demo();
 	print_reg();
 	char a[100];
-	fgets(a,sizeof(a), stdin);
-	interpret(a);
-	return 0;
+	while(1){
+		printf("Please enter an instruction, to exit enter z\n");
+		fgets(a,sizeof(a), stdin);
+		if(*a == 'z' || *a == 'Z'){
+			break;
+		}
+		interpret(a);
+		printf("\n");
+	}
+	print_reg();
 }
 
