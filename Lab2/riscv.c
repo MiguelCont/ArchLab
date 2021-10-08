@@ -198,6 +198,7 @@ int main(){
 		interpret(a);
 		printf("\n");
 	}
+	printf("Final Register Values:\n");
 	print_reg();
 }
 
